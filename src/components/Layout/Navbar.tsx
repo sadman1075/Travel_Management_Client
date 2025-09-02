@@ -12,11 +12,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { ModeToggle } from "./MoodeToggler"
+import { Link } from "react-router"
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "#", label: "Home", active: true },
-  { href: "#", label: "Features" },
+  { href: "/", label: "Home", active: true },
+  { href: "/about", label: "About" },
   { href: "#", label: "Pricing" },
   { href: "#", label: "About" },
 ]
@@ -65,11 +66,12 @@ export default function Navbar() {
                     {navigationLinks.map((link, index) => (
                       <NavigationMenuItem key={index} className="w-full">
                         <NavigationMenuLink
-                          href={link.href}
+
                           className="py-1.5"
-                          active={link.active}
+
                         >
-                          {link.label}
+                          <Link to={link.href}>{link.label}</Link>
+
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                     ))}
@@ -95,11 +97,9 @@ export default function Navbar() {
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index} className="h-full">
                     <NavigationMenuLink
-                      active={link.active}
-                      href={link.href}
                       className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
                     >
-                      {link.label}
+                      <Link to={link.href}>{link.label}</Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
@@ -109,11 +109,8 @@ export default function Navbar() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm" className="text-sm">
-            <a href="#">Sign In</a>
-          </Button>
           <Button asChild size="sm" className="text-sm">
-            <a href="#">Get Started</a>
+            <Link to="/login">Login</Link>
           </Button>
           <ModeToggle></ModeToggle>
         </div>

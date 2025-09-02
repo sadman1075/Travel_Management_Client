@@ -15,7 +15,7 @@ const Footer = () => {
                                 />
                                 
                             </svg>
-                            <h1 className="lg:text-3xl font-semibold">TourHive</h1>
+                            <h1 className="lg:text-3xl font-semibold">TourNest</h1>
                           </div>
                         </div>
 

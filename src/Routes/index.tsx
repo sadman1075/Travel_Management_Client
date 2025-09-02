@@ -1,7 +1,10 @@
 
 import AdminLayout from "@/components/Layout/AdminLayout"
 import CommonLayout from "@/components/Layout/ComonLayout"
-import Home from "@/pages/Home/Home"
+import About from "@/pages/About"
+import Home from "@/pages/Home"
+import LoginPage from "@/pages/Login"
+import RegistrationPage from "@/pages/Registration"
 
 import { createBrowserRouter } from "react-router"
 
@@ -13,8 +16,20 @@ export const router = createBrowserRouter([
             {
                 Component: Home,
                 path: "/"
+            },
+            {
+                Component: About,
+                path: "/about"
             }
         ]
+    },
+    {
+        Component: LoginPage,
+        path: "/login"
+    },
+    {
+        Component: RegistrationPage,
+        path: "/registration"
     },
     {
         Component: AdminLayout,
