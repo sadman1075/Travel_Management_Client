@@ -24,6 +24,7 @@ const Verify = () => {
     const [confirm, setConfirm] = useState(false)
     const [sendotp] = useSendotpMutation()
     const [verifyotp] = useVerifyotpMutation()
+    const [timer, setTimer] = useState(120)
     const form = useForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -37,8 +38,17 @@ const Verify = () => {
         }
     },)
 
+    useEffect(() => {
+        const timerId = setInterval(() => {
+            if (email && confirm) {
+                setTimer((prev) => (prev > 0 ? prev - 1 : 0))
+            }
+        }, 1000);
+        return ()=>clearInterval(timerId)
+    }, [email, confirm])
     const handleConfirm = async () => {
         setConfirm(true)
+        setTimer(120)
         const res = await sendotp({ email: email })
         if (res) {
             toast.success("Otp send to your email")
@@ -55,14 +65,18 @@ const Verify = () => {
             email: email,
             otp: data.pin
         }
-        console.log(userinfo);
-        const res = await verifyotp(userinfo)
-        if (res) {
-            toast.success("verified successfully")
-            navigate("/")
-        }
-        else {
-            toast.error("something went wrong")
+
+        try {
+            const res = await verifyotp(userinfo)
+            console.log(res.data.statusCode);
+            if (res.data.statusCode === 200) {
+                toast.success("verified successfully")
+                navigate("/")
+            }
+
+        } catch (err) {
+            toast.error("Otp expired,Generate a new Otp")
+
         }
 
     }
@@ -113,6 +127,12 @@ const Verify = () => {
                                                     </InputOTP>
                                                 </FormControl>
                                             </div>
+
+                                            <FormDescription className="flex justify-center items-center gap-12">
+                                                <button disabled={timer !== 0} onClick={handleConfirm} className=" font-bold">
+                                                    {timer !== 0 ? <p>{`Resend Otp In ${timer}s`}</p> : <p className="text-red-600 ">Resend otp</p>}
+                                                </button>
+                                            </FormDescription>
                                             <FormDescription className="mt-3">
                                                 Please enter the one-time password sent to your gmail.
                                             </FormDescription>
@@ -120,7 +140,7 @@ const Verify = () => {
                                         </FormItem>
                                     )}
                                 />
-                                <Button className="mt-5" type="submit">Submit</Button>
+                                <Button className="mt-5" type="submit">verify otp</Button>
                             </form>
                         </Form>
                     </Card >
