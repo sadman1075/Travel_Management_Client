@@ -1,10 +1,11 @@
 // Need to use the React-specific entry point to import createApi
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi} from '@reduxjs/toolkit/query/react'
+import { axiosBaseQuery } from './axiosBaseQuery'
 
 // Define a service using a base URL and expected endpoints
 export const baseApi = createApi({
   reducerPath: 'baseApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://travel-management-server-gilt.vercel.app/api/v1' }),
+  baseQuery: axiosBaseQuery(),
   endpoints: () => ({
   
   }),

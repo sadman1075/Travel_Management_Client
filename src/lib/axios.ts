@@ -1,27 +1,28 @@
-import { config } from "@/config"
-import axios from "axios"
+import { config } from "@/config";
+import axios from "axios";
 
 export const axiosInstance = axios.create({
-    baseURL:config.baseUrl
-})
+  baseURL: config.baseUrl,
+});
 
-// Add a request interceptor
-axios.interceptors.request.use(function (config) {
-    // Do something before request is sent
+axiosInstance.interceptors.request.use(
+  function (config) {
+   
     return config;
-  }, function (error) {
-    // Do something with request error
-    return Promise.reject(error);
   },
+  function (error) {
+    return Promise.reject(error);
+  }
 );
 
-// Add a response interceptor
-axios.interceptors.response.use(function onFulfilled(response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
+
+axiosInstance.interceptors.response.use(
+  function onFulfilled(response) {
+    
     return response;
-  }, function onRejected(error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+  },
+  function onRejected(error) {
+    
     return Promise.reject(error);
-  });
+  }
+);

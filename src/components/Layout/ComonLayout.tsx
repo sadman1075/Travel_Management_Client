@@ -8,7 +8,7 @@ import Navbar from "./Navbar";
 
 export default function CommonLayout() {
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className=" flex flex-col min-h-screen">
             <Navbar />
             <div className="grow-1">
                 <Outlet />
