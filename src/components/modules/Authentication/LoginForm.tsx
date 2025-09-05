@@ -17,8 +17,9 @@ export function LoginForm({
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const res = await login(data).unwrap();
+     
 
-      if (res.data.user.isVerfied === true) {
+      if (res.data.user.isVerified == true) {
         toast.success("Successfully login ")
         navigate("/")
       }

@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { useSendotpMutation, useVerifyotpMutation } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router";
 import { z } from "zod"
 
@@ -20,6 +22,8 @@ const Verify = () => {
     const navigate = useNavigate()
     const [email] = useState(location.state);
     const [confirm, setConfirm] = useState(false)
+    const [sendotp] = useSendotpMutation()
+    const [verifyotp] = useVerifyotpMutation()
     const form = useForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -33,12 +37,33 @@ const Verify = () => {
         }
     },)
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         setConfirm(true)
+        const res = await sendotp({ email: email })
+        if (res) {
+            toast.success("Otp send to your email")
+        }
+        else {
+            toast.error("something went wrong")
+        }
+
+
     }
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        const userinfo = {
+            email: email,
+            otp: data.pin
+        }
+        console.log(userinfo);
+        const res = await verifyotp(userinfo)
+        if (res) {
+            toast.success("verified successfully")
+            navigate("/")
+        }
+        else {
+            toast.error("something went wrong")
+        }
 
     }
     return (
