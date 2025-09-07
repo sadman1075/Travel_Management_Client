@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
+import { config } from "@/config";
 
 export function LoginForm({
   className,
@@ -17,7 +18,7 @@ export function LoginForm({
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const res = await login(data).unwrap();
-     
+
 
       if (res.data.user.isVerified == true) {
         toast.success("Successfully login ")
@@ -91,7 +92,7 @@ export function LoginForm({
             Or continue with
           </span>
         </div>
-        <Link to={"https://travel-management-server-gilt.vercel.app/api/v1/auth/google"}>
+        <Link to={`${config.baseUrl}/auth/google`}>
           <Button variant="outline" className="w-full">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path

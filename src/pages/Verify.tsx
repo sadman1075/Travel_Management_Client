@@ -65,14 +65,15 @@ const Verify = () => {
             email: email,
             otp: data.pin
         }
-
+console.log(userinfo);
         try {
             const res = await verifyotp(userinfo)
-            console.log(res.data.statusCode);
+            console.log(res);
             if (res.data.statusCode === 200) {
                 toast.success("verified successfully")
                 navigate("/")
             }
+          
 
         } catch (err) {
             toast.error("Otp expired,Generate a new Otp")

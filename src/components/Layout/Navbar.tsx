@@ -12,8 +12,25 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { ModeToggle } from "./MoodeToggler"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
+import { authApi, useLogoutMutation, useUserInfoQuery, } from "@/redux/features/auth/auth.api"
 
+import toast from "react-hot-toast"
+import { useAppDispatch } from "@/redux/hook"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home", active: true },
@@ -23,6 +40,26 @@ const navigationLinks = [
 ]
 
 export default function Navbar() {
+  const { data } = useUserInfoQuery(undefined)
+  const [logout] = useLogoutMutation()
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  const handleLogout = async () => {
+    const res = await logout(undefined)
+    dispatch(authApi.util.resetApiState())
+
+    if (res.data.statusCode === 201) {
+      toast.success("successfully Logout")
+      navigate("/")
+
+    }
+    else {
+      toast.error("something went wrong")
+    }
+
+  }
+
   return (
     <header className=" border-b  bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 flex h-16 items-center justify-between gap-4">
@@ -109,10 +146,35 @@ export default function Navbar() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button asChild size="sm" className="text-sm">
-            <Link to="/login">Login</Link>
-          </Button>
           <ModeToggle></ModeToggle>
+          {
+            data ?
+              <DropdownMenu >
+                <DropdownMenuTrigger asChild>
+                  <img src={data.data.picture} alt="" className="inline-block size-9 rounded-full ring-2 ring-white outline -outline-offset-1 outline-black/5" />
+
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-40 " align="start">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                   My Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem  onClick={handleLogout}>
+                    <p className="text-red-500 font-semibold hover:-red-500">Log out</p>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              //
+
+              :
+
+              <Button asChild size="sm" className="text-sm">
+
+                <Link to="/login">Login</Link>
+              </Button>
+          }
         </div>
       </div>
     </header>
