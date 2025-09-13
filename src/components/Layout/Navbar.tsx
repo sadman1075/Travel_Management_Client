@@ -20,7 +20,7 @@ import { useAppDispatch } from "@/redux/hook"
 import {
   DropdownMenu,
   DropdownMenuContent,
- 
+
   DropdownMenuItem,
   DropdownMenuLabel,
 
@@ -28,12 +28,16 @@ import {
 
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { role } from "@/constants/role"
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home", active: true },
-  { href: "/about", label: "About" },
-  { href: "#", label: "Pricing" },
-  { href: "#", label: "About" },
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "/tours", label: "Tours", role: "PUBLIC" },
+  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "#", label: "Pricing", role: "PUBLIC" },
+  { href: "/admin", label: "Dashboard", role: role.superAdmin },
+  { href: "/admin", label: "Dashboard", role: role.admin },
+  { href: "/user", label: "Dashboard", role: role.user },
 ]
 
 export default function Navbar() {
@@ -98,16 +102,26 @@ export default function Navbar() {
                 <NavigationMenu className="max-w-none *:w-full">
                   <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                     {navigationLinks.map((link, index) => (
-                      <NavigationMenuItem key={index} className="w-full">
-                        <NavigationMenuLink
-
-                          className="py-1.5"
-
-                        >
-                          <Link to={link.href}>{link.label}</Link>
-
-                        </NavigationMenuLink>
-                      </NavigationMenuItem>
+                      <>
+                        {
+                          link.role === "PUBLIC" && <NavigationMenuItem key={index} className="h-full">
+                            <NavigationMenuLink
+                              className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
+                            >
+                              <Link to={link.href}>{link.label}</Link>
+                            </NavigationMenuLink>
+                          </NavigationMenuItem>
+                        }
+                        {
+                          link.role === data?.data?.role && <NavigationMenuItem key={index} className="h-full">
+                            <NavigationMenuLink
+                              className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
+                            >
+                              <Link to={link.href}>{link.label}</Link>
+                            </NavigationMenuLink>
+                          </NavigationMenuItem>
+                        }
+                      </>
                     ))}
                   </NavigationMenuList>
                 </NavigationMenu>
@@ -129,13 +143,26 @@ export default function Navbar() {
             <NavigationMenu className="h-full *:h-full max-md:hidden">
               <NavigationMenuList className="h-full gap-2">
                 {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index} className="h-full">
-                    <NavigationMenuLink
-                      className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
-                    >
-                      <Link to={link.href}>{link.label}</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
+                  <>
+                    {
+                      link.role === "PUBLIC" && <NavigationMenuItem key={index} className="h-full">
+                        <NavigationMenuLink
+                          className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
+                        >
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    }
+                    {
+                      link.role === data?.data?.role && <NavigationMenuItem key={index} className="h-full">
+                        <NavigationMenuLink
+                          className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
+                        >
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    }
+                  </>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
@@ -156,9 +183,9 @@ export default function Navbar() {
 
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                   My Profile
+                    My Profile
                   </DropdownMenuItem>
-                  <DropdownMenuItem  onClick={handleLogout}>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <p className="text-red-500 font-semibold hover:-red-500">Log out</p>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

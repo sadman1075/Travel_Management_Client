@@ -1,18 +1,22 @@
 
-import AdminLayout from "@/components/Layout/AdminLayout"
 import CommonLayout from "@/components/Layout/ComonLayout"
 import About from "@/pages/About"
-import AddTour from "@/pages/Admin/AddTour"
-import Analytics from "@/pages/Admin/Analytics"
 import Home from "@/pages/Home"
 import LoginPage from "@/pages/Login"
 import RegistrationPage from "@/pages/Registration"
-import Bookings from "@/pages/user/Bookings"
 import Verify from "@/pages/Verify"
 import { generateRoutes } from "@/utils/generateRoutes"
 
-import { createBrowserRouter } from "react-router"
+import { createBrowserRouter, Navigate } from "react-router"
 import { adminSidebarItems } from "./adminSidebarItems"
+import DashboardLayout from "@/components/Layout/DashboardLayout"
+import { userSidebarItems } from "./userSidebarItems"
+import UnAuthorized from "@/pages/UnAuthorized"
+import { withAuth } from "@/utils/withAuth"
+import type { TRole } from "@/types"
+import { role } from "@/constants/role"
+import Tours from "@/pages/Tours"
+import ToursDetails from "@/pages/ToursDetails"
 
 export const router = createBrowserRouter([
     {
@@ -24,26 +28,35 @@ export const router = createBrowserRouter([
                 path: "/"
             },
             {
+                Component: Tours,
+                path: "/tours"
+            },
+            {
+                Component: ToursDetails,
+                path: "/tour/:id"
+            },
+            {
                 Component: About,
                 path: "/about"
             }
         ]
     },
+    //dashboard layout for admin
     {
-        Component: AdminLayout,
+        Component: withAuth(DashboardLayout, role.superAdmin as TRole),
         path: "/admin",
-        children: [...generateRoutes(adminSidebarItems)]
-    },
-    {
-        Component: AdminLayout,
-        path: "/user",
         children: [
-            {
-                Component: Bookings,
-                path: "bookings"
-            }
-
+            { index: true, element: <Navigate to="/admin/analytics"></Navigate> },
+            ...generateRoutes(adminSidebarItems)
         ]
+    },
+
+
+    // dashboard layout for user
+    {
+        Component: withAuth(DashboardLayout, role.user as TRole),
+        path: "/user",
+        children: [...generateRoutes(userSidebarItems)]
     },
     {
         Component: LoginPage,
@@ -58,8 +71,9 @@ export const router = createBrowserRouter([
         path: "/verify"
     },
     {
-        Component: AdminLayout,
-        path: "/admin-layout"
-    }
+        Component: UnAuthorized,
+        path: "/unauthorized"
+    },
+
 
 ])
